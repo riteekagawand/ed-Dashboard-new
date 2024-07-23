@@ -1,0 +1,26 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+  .flexCenter {
+    @apply flex items-center justify-center;
+  }
+
+  .flexBetween {
+    @apply flex items-center justify-between;
+  }
+
+  .flexColBetween {
+    @apply flex flex-col items-start justify-between;
+  }
+  .flexColCenter {
+    @apply flex flex-col items-center justify-between;
+  }
+  .flexCol {
+    @apply flex flex-col items-start justify-start;
+  }
+}
