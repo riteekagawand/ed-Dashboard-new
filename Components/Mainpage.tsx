@@ -19,10 +19,14 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/Components/ui/select"
+import { RadioGroup, RadioGroupItem } from "@/Components/ui/radio-group"
+import { Textarea } from "@/Components/ui/textarea"
+
+
 
 const Mainpage = () => {
   return (
-  <div>
+  <div >
     {/* 1st Card */}
     <Card className="w-[450px] mt-20 shadow-md">
       <CardHeader>
@@ -83,6 +87,68 @@ const Mainpage = () => {
         </form>
       </CardContent>
     </Card>
+
+        {/* 4th Card */}
+        <Card className="w-[450px] mt-5 shadow-md">
+      <CardHeader>
+        <div className='flex items-center space-x-2'>
+            <CardTitle className="text-lg">Course Tag</CardTitle>
+            <CardDescription className="text-sm">(required)</CardDescription>
+        </div>
+      </CardHeader>
+      <CardContent>
+        <form>
+        <div>
+          <RadioGroup defaultValue="option-one">
+            <div className="flex items-center space-x-2">
+              <RadioGroupItem value="popular" id="popular" />
+              <Label htmlFor="popular">Popular</Label>
+            </div>
+            <div className="flex items-center space-x-2">
+              <RadioGroupItem value="new" id="new" />
+              <Label htmlFor="popular">New</Label>
+            </div>
+          </RadioGroup>
+        </div>
+        </form>
+      </CardContent>
+    </Card>
+
+    {/* 5th Card */}
+    <Card className="w-[450px] mt-5 shadow-md">
+      <CardHeader>
+        <div className='flex items-center space-x-2'>
+            <CardTitle className="text-lg">Description</CardTitle>
+            <CardDescription className="text-sm">(required)</CardDescription>
+        </div>
+      </CardHeader>
+      <CardContent>
+        <form>
+          <div>
+          <Textarea placeholder="Type your description here." />
+           </div>
+        </form>
+      </CardContent>
+    </Card>
+
+    {/* 6th Card */}
+    <Card className="w-[450px] mt-5 shadow-md">
+      <CardHeader>
+        <div className='flex items-center space-x-2'>
+            <CardTitle className="text-lg">Skill Objective</CardTitle>
+            <CardDescription className="text-sm">(required)</CardDescription>
+        </div>
+      </CardHeader>
+      <CardContent>
+        <form>
+          <div>
+          <Textarea placeholder="Type your description here." />
+           </div>
+        </form>
+      </CardContent>
+    </Card>
+
+
 
   </div>
 

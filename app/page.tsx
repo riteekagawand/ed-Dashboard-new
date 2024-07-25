@@ -4,7 +4,7 @@ import Mainpage from "@/Components/Mainpage"
 
 export default function Home() {
   return (
-    <div className="bg-gray-100 h-screen">
+    <div className="bg-gray-100 h-scroll">
     <Navbar />
     <Sidebar />
     <div className="flex justify-center items-center">
