@@ -85,7 +85,7 @@ const SortableField = ({ item, onItemChange, onDelete, onAddSubItem }: { item: I
           </div>
         </div>
       </div>
-      <div ref={sortableContainer} >
+      <div ref={sortableContainer}>
         {item.subItems.map(subItem => (
           <div key={subItem.id} className="flex items-center mb-2 p-2 bg-white rounded-md border border-gray-300 shadow-sm w-full">
             <FiMenu className="mr-2 cursor-pointer" />
@@ -97,14 +97,14 @@ const SortableField = ({ item, onItemChange, onDelete, onAddSubItem }: { item: I
               placeholder="Type your skill objective"
             />
             <div className="flex items-center space-x-2 ml-2">
-            <Button
-              onClick={() => onAddSubItem(item.id)}
-              disabled={item.subItems.length >= MAX_SUBFIELDS}
-              variant="gray"
-             className="p-2"
-            >
-              <FiPlus className="text-gray-800" size={20}/>
-            </Button>
+              <Button
+                onClick={() => onAddSubItem(item.id)}
+                disabled={item.subItems.length >= MAX_SUBFIELDS}
+                variant="gray"
+                className="p-2"
+              >
+                <FiPlus className="text-gray-800" size={20} />
+              </Button>
               <DropdownMenu>
                 <DropdownMenuTrigger>
                   <FiMoreVertical className="cursor-pointer" />
@@ -155,11 +155,35 @@ const SortableComponent = () => {
   }
 
   const handleDeleteItem = (id: string) => {
-    setItems(items.filter(item => item.id !== id && !item.subItems.some(subItem => subItem.id === id)))
+    const deleteSubItem = (items: Item[]) => {
+      return items.map(item => {
+        return {
+          ...item,
+          subItems: item.subItems.filter(subItem => subItem.id !== id)
+        }
+      }).filter(item => item.id !== id)
+    }
+    setItems(deleteSubItem)
   }
 
+  const sortableContainer = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    if (sortableContainer.current) {
+      Sortable.create(sortableContainer.current, {
+        animation: 150,
+        onEnd: (evt) => {
+          const newItems = [...items]
+          const [removed] = newItems.splice(evt.oldIndex, 1)
+          newItems.splice(evt.newIndex, 0, removed)
+          setItems(newItems)
+        },
+      })
+    }
+  }, [items])
+
   return (
-    <div className="space-y-4">
+    <div className="space-y-4" ref={sortableContainer}>
       {items.map(item => (
         <SortableField
           key={item.id}
