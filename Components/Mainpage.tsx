@@ -1,5 +1,7 @@
 "use client";
 import * as React from "react";
+import { FiUpload } from "react-icons/fi";
+import { PiDiamondsFour } from "react-icons/pi";
 import SortableComponent from "./Sortable";
 
 import {
@@ -86,9 +88,10 @@ const Mainpage = () => {
           </CardHeader>
           <CardContent>
             <form>
-              <div className="flex flex-col space-y-4">
+              <div className="flex flex-row gap-[100px]">
                 {/* Choose a File Option */}
-                <div className="flex items-center space-x-2">
+                <div className="flex  items-center space-x-2">
+                <PiDiamondsFour className="text-purple-500 text-[20px]"/>
                   <Input
                     id="choose-file"
                     type="file"
@@ -96,13 +99,14 @@ const Mainpage = () => {
                     onChange={handleLogoChange}
                     className="hidden"
                   />
-                  <label htmlFor="choose-file" className="cursor-pointer text-blue-500">
+                  <label htmlFor="choose-file" className="cursor-pointer text-purple-500">
                     Choose a file
                   </label>
                 </div>
 
                 {/* Upload a File Here Option */}
                 <div className="flex items-center space-x-2">
+                <FiUpload className="text-purple-500 text-[20px]"/>
                   <Input
                     id="upload-file"
                     type="file"
@@ -110,11 +114,14 @@ const Mainpage = () => {
                     onChange={handleLogoChange}
                     className="hidden"
                   />
-                  <label htmlFor="upload-file" className="cursor-pointer text-blue-500">
+                  <label htmlFor="upload-file" className="cursor-pointer text-purple-500">
                     Upload a file here
                   </label>
                 </div>
 
+                
+              </div>
+              <div className="mt-5">
                 {/* Display Selected Logo */}
                 {logo && (
                   <img
