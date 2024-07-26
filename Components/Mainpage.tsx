@@ -1,6 +1,6 @@
-"use client"
-import * as React from "react"
-import SortableComponent from "./Sortable"
+"use client";
+import * as React from "react";
+import SortableComponent from "./Sortable";
 
 import {
   Card,
@@ -8,19 +8,18 @@ import {
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/Components/ui/card"
-import { Input } from "@/Components/ui/input"
-import { Label } from "@/Components/ui/label"
+} from "@/Components/ui/card";
+import { Input } from "@/Components/ui/input";
+import { Label } from "@/Components/ui/label";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/Components/ui/select"
-import { RadioGroup, RadioGroupItem } from "@/Components/ui/radio-group"
-import { Textarea } from "@/Components/ui/textarea"
-
+} from "@/Components/ui/select";
+import { RadioGroup, RadioGroupItem } from "@/Components/ui/radio-group";
+import { Textarea } from "@/Components/ui/textarea";
 
 const Mainpage = () => {
   const [logo, setLogo] = React.useState<string | null>(null);
@@ -47,9 +46,7 @@ const Mainpage = () => {
         </CardHeader>
         <CardContent>
           <form>
-            <div>
-              <Input id="title" placeholder="Title of the roadmap" />
-            </div>
+            <Input id="title" placeholder="Title of the roadmap" />
           </form>
         </CardContent>
       </Card>
@@ -63,42 +60,76 @@ const Mainpage = () => {
         </CardHeader>
         <CardContent>
           <form>
-            <div className="flex flex-col space-y-1.5">
-              <Select>
-                <SelectTrigger id="framework">
-                  <SelectValue placeholder="Select" />
-                </SelectTrigger>
-                <SelectContent position="popper">
-                  <SelectItem value="coding">Coding</SelectItem>
-                  <SelectItem value="design">Design</SelectItem>
-                  <SelectItem value="product">Product</SelectItem>
-                  <SelectItem value="softskills">Soft Skills</SelectItem>
-                  <SelectItem value="marketing">Marketing</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
+            <Select>
+              <SelectTrigger id="category">
+                <SelectValue placeholder="Select" />
+              </SelectTrigger>
+              <SelectContent position="popper">
+                <SelectItem value="coding">Coding</SelectItem>
+                <SelectItem value="design">Design</SelectItem>
+                <SelectItem value="product">Product</SelectItem>
+                <SelectItem value="softskills">Soft Skills</SelectItem>
+                <SelectItem value="marketing">Marketing</SelectItem>
+              </SelectContent>
+            </Select>
           </form>
         </CardContent>
       </Card>
 
       {/* 3rd Card */}
-      <Card className="w-[450px] mt-5 shadow-md">
-        <CardHeader>
-          <div className='flex items-center space-x-2'>
-            <CardTitle className="text-lg">Logo</CardTitle>
-            <CardDescription className="text-sm">(required)</CardDescription>
-          </div>
-        </CardHeader>
-        <CardContent>
-          <form>
-            <div>
-              <Input id="logo" type="file" placeholder="Logo" onChange={handleLogoChange} />
-              {logo && <img src={logo} alt="Selected logo" className="mt-2 w-full max-h-[200px] object-cover" />}
+        <Card className="w-[450px] mt-5 shadow-md">
+          <CardHeader>
+            <div className='flex items-center space-x-2'>
+              <CardTitle className="text-lg">Logo</CardTitle>
+              <CardDescription className="text-sm">(required)</CardDescription>
             </div>
-          </form>
-        </CardContent>
-      </Card>
-       {/* 4th Card */}
+          </CardHeader>
+          <CardContent>
+            <form>
+              <div className="flex flex-col space-y-4">
+                {/* Choose a File Option */}
+                <div className="flex items-center space-x-2">
+                  <Input
+                    id="choose-file"
+                    type="file"
+                    placeholder="Choose a file"
+                    onChange={handleLogoChange}
+                    className="hidden"
+                  />
+                  <label htmlFor="choose-file" className="cursor-pointer text-blue-500">
+                    Choose a file
+                  </label>
+                </div>
+
+                {/* Upload a File Here Option */}
+                <div className="flex items-center space-x-2">
+                  <Input
+                    id="upload-file"
+                    type="file"
+                    placeholder="Upload a file here"
+                    onChange={handleLogoChange}
+                    className="hidden"
+                  />
+                  <label htmlFor="upload-file" className="cursor-pointer text-blue-500">
+                    Upload a file here
+                  </label>
+                </div>
+
+                {/* Display Selected Logo */}
+                {logo && (
+                  <img
+                    src={logo}
+                    alt="Selected logo"
+                    className="mt-2 w-full max-h-[200px] object-cover"
+                  />
+                )}
+              </div>
+            </form>
+          </CardContent>
+        </Card>
+
+
+      {/* 4th Card */}
       <Card className="w-[450px] mt-5 shadow-md">
         <CardHeader>
           <div className='flex items-center space-x-2'>
@@ -108,18 +139,16 @@ const Mainpage = () => {
         </CardHeader>
         <CardContent>
           <form>
-            <div>
-              <RadioGroup defaultValue="option-one">
-                <div className="flex items-center space-x-2">
-                  <RadioGroupItem value="popular" id="popular" />
-                  <Label htmlFor="popular">Popular</Label>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <RadioGroupItem value="new" id="new" />
-                  <Label htmlFor="new">New</Label>
-                </div>
-              </RadioGroup>
-            </div>
+            <RadioGroup defaultValue="popular">
+              <div className="flex items-center space-x-2">
+                <RadioGroupItem value="popular" id="popular" />
+                <Label htmlFor="popular">Popular</Label>
+              </div>
+              <div className="flex items-center space-x-2">
+                <RadioGroupItem value="new" id="new" />
+                <Label htmlFor="new">New</Label>
+              </div>
+            </RadioGroup>
           </form>
         </CardContent>
       </Card>
@@ -134,9 +163,7 @@ const Mainpage = () => {
         </CardHeader>
         <CardContent>
           <form>
-            <div>
-              <Textarea id="description" placeholder="Description of your roadmap" />
-            </div>
+            <Textarea id="description" placeholder="Description of your roadmap" />
           </form>
         </CardContent>
       </Card>
@@ -164,9 +191,7 @@ const Mainpage = () => {
         </CardHeader>
         <CardContent>
           <form>
-            <div>
-              <Input id="title" placeholder="Title of the roadmap" />
-            </div>
+            <Input id="total-time" placeholder="Total Time" />
           </form>
         </CardContent>
       </Card>
@@ -181,14 +206,12 @@ const Mainpage = () => {
         </CardHeader>
         <CardContent>
           <form>
-            <div>
-              <Input id="title" placeholder="Title of the roadmap" />
-            </div>
+            <Input id="total-units" placeholder="Total Units" />
           </form>
         </CardContent>
       </Card>
-</div>
-  )
-}
+    </div>
+  );
+};
 
-export default Mainpage
+export default Mainpage;
