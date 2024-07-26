@@ -198,6 +198,18 @@ const SortableComponent = () => {
 }
 
 const Mainpage = () => {
+  const [logo, setLogo] = useState<string | null>(null);
+
+  const handleLogoChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (event.target.files && event.target.files[0]) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        setLogo(e.target?.result as string);
+      };
+      reader.readAsDataURL(event.target.files[0]);
+    }
+  };
+
   return (
     <div className="p-4">
       {/* 1st Card */}
@@ -255,13 +267,13 @@ const Mainpage = () => {
         <CardContent>
           <form>
             <div>
-              <Input id="logo" type="file" placeholder="Logo" />
+              <Input id="logo" type="file" placeholder="Logo" onChange={handleLogoChange} />
+              {logo && <img src={logo} alt="Selected logo" className="mt-2 w-full max-h-[200px] object-cover" />}
             </div>
           </form>
         </CardContent>
       </Card>
-
-      {/* 4th Card */}
+       {/* 4th Card */}
       <Card className="w-[450px] mt-5 shadow-md">
         <CardHeader>
           <div className='flex items-center space-x-2'>
@@ -298,7 +310,7 @@ const Mainpage = () => {
         <CardContent>
           <form>
             <div>
-              <Textarea placeholder="Type your description here." />
+              <Textarea id="description" placeholder="Description of your roadmap" />
             </div>
           </form>
         </CardContent>
@@ -308,31 +320,17 @@ const Mainpage = () => {
       <Card className="w-[450px] mt-5 shadow-md">
         <CardHeader>
           <div className='flex items-center space-x-2'>
-            <CardTitle className="text-lg">Skill Objective</CardTitle>
-            <CardDescription className="text-sm">(required)</CardDescription>
-          </div>
-        </CardHeader>
-        <CardContent>
-          <form>
-            <div>
-              <Textarea placeholder="Type your description here." />
-            </div>
-          </form>
-        </CardContent>
-      </Card>
-
-      {/* 7th Card: Sortable List */}
-      <Card className="w-[450px] mt-5 shadow-md">
-        <CardHeader>
-          <div className='flex items-center space-x-2'>
-            <CardTitle className="text-lg">Sortable List</CardTitle>
-            <CardDescription className="text-sm">(required)</CardDescription>
+            <CardTitle className="text-lg">Skill Objectives</CardTitle>
           </div>
         </CardHeader>
         <CardContent>
           <SortableComponent />
         </CardContent>
       </Card>
+
+      
+
+      
     </div>
   )
 }
