@@ -28,7 +28,7 @@ const SortableField = ({
   if (!item || !item.id) return null; // Handle undefined or missing id
 
   return (
-    <div className="p-2 bg-gray-100 rounded-md border border-gray-200 shadow-sm">
+    
       <div className="flex items-center justify-between mb-2">
         <div className="flex items-center w-full">
           <MdOutlineDragIndicator className="mr-2 cursor-grab text-gray-500" size={22} />
@@ -61,7 +61,6 @@ const SortableField = ({
           </div>
         </div>
       </div>
-    </div>
   );
 };
 
