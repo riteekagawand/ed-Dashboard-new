@@ -2,7 +2,8 @@
 import * as React from "react"
 import { useEffect, useRef, useState } from 'react'
 import Sortable from 'sortablejs'
-import { FiPlus, FiMenu, FiMoreVertical, FiTrash } from 'react-icons/fi'
+import { FiPlus, FiMoreVertical, FiTrash } from 'react-icons/fi'
+import { MdOutlineDragIndicator } from "react-icons/md";
 import { Button } from "@/Components/ui/button"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/Components/ui/dropdown-menu"
 
@@ -33,7 +34,7 @@ type Item = {
 
 const MAX_SUBFIELDS = 15
 
-const SortableField = ({ item, onItemChange, onDelete, onAddSubItem }: { item: Item, onItemChange: (id: string, content: string) => void, onDelete: (id: string) => void, onAddSubItem: (parentId: string) => void }) => {
+const SortableField = ({ item, onItemChange, onDelete, onAddSubItem, onSubItemChange }: { item: Item, onItemChange: (id: string, content: string) => void, onDelete: (id: string) => void, onAddSubItem: (parentId: string) => void, onSubItemChange: (parentId: string, subItemId: string, content: string) => void }) => {
   const sortableContainer = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
@@ -55,7 +56,7 @@ const SortableField = ({ item, onItemChange, onDelete, onAddSubItem }: { item: I
     <div className="p-2 bg-gray-100 rounded-md border border-gray-200 shadow-sm">
       <div className="flex items-center justify-between mb-2">
         <div className="flex items-center w-full">
-          <FiMenu className="mr-2 cursor-pointer" />
+          <MdOutlineDragIndicator className="mr-2 cursor-grab text-gray-500" size={22} />
           <Input
             type="text"
             value={item.content}
@@ -67,7 +68,7 @@ const SortableField = ({ item, onItemChange, onDelete, onAddSubItem }: { item: I
             <Button
               onClick={() => onAddSubItem(item.id)}
               disabled={item.subItems.length >= MAX_SUBFIELDS}
-              className="p-2"
+              className="p-2 bg-gray-100"
               variant="gray"
             >
               <FiPlus className="text-gray-800" size={20} />
@@ -88,11 +89,11 @@ const SortableField = ({ item, onItemChange, onDelete, onAddSubItem }: { item: I
       <div ref={sortableContainer}>
         {item.subItems.map(subItem => (
           <div key={subItem.id} className="flex items-center mb-2 p-2 bg-white rounded-md border border-gray-300 shadow-sm w-full">
-            <FiMenu className="mr-2 cursor-pointer" />
+            <MdOutlineDragIndicator className="mr-2 cursor-grab text-gray-500" size={22} />
             <Input
               type="text"
               value={subItem.content}
-              onChange={(e) => onItemChange(subItem.id, e.target.value)}
+              onChange={(e) => onSubItemChange(item.id, subItem.id, e.target.value)}
               className="flex-1"
               placeholder="Type your skill objective"
             />
@@ -100,8 +101,8 @@ const SortableField = ({ item, onItemChange, onDelete, onAddSubItem }: { item: I
               <Button
                 onClick={() => onAddSubItem(item.id)}
                 disabled={item.subItems.length >= MAX_SUBFIELDS}
+                className="p-2 bg-gray-100"
                 variant="gray"
-                className="p-2"
               >
                 <FiPlus className="text-gray-800" size={20} />
               </Button>
@@ -132,13 +133,17 @@ const SortableComponent = () => {
 
   const handleItemChange = (id: string, content: string) => {
     setItems(items.map(item =>
-      item.id === id ? { ...item, content } : item
+      item.id === id ? { ...item, content: content.startsWith('[') ? JSON.parse(content) : content } : item
     ))
   }
 
-  const handleSubItemChange = (parentId: string, newSubItems: string) => {
-    setItems(items.map(item =>
-      item.id === parentId ? { ...item, subItems: JSON.parse(newSubItems) } : item
+  const handleSubItemChange = (parentId: string, subItemId: string, content: string) => {
+    setItems(items.map(item => 
+      item.id === parentId 
+        ? { ...item, subItems: item.subItems.map(subItem => 
+            subItem.id === subItemId ? { ...subItem, content } : subItem 
+          )} 
+        : item
     ))
   }
 
@@ -156,12 +161,10 @@ const SortableComponent = () => {
 
   const handleDeleteItem = (id: string) => {
     const deleteSubItem = (items: Item[]) => {
-      return items.map(item => {
-        return {
-          ...item,
-          subItems: item.subItems.filter(subItem => subItem.id !== id)
-        }
-      }).filter(item => item.id !== id)
+      return items.map(item => ({
+        ...item,
+        subItems: item.subItems.filter(subItem => subItem.id !== id)
+      })).filter(item => item.id !== id)
     }
     setItems(deleteSubItem)
   }
@@ -188,14 +191,16 @@ const SortableComponent = () => {
         <SortableField
           key={item.id}
           item={item}
-          onItemChange={(id, content) => handleItemChange(id, content)}
+          onItemChange={handleItemChange}
           onDelete={handleDeleteItem}
           onAddSubItem={handleAddSubItem}
+          onSubItemChange={handleSubItemChange}
         />
       ))}
     </div>
   )
 }
+
 
 const Mainpage = () => {
   return (
@@ -304,7 +309,7 @@ const Mainpage = () => {
         </CardContent>
       </Card>
 
-      {/* 6th Card */}
+      {/* 6th Card: Sortable List */}
       <Card className="w-[450px] mt-5 shadow-md">
         <CardHeader>
           <div className='flex items-center space-x-2'>
@@ -313,26 +318,47 @@ const Mainpage = () => {
           </div>
         </CardHeader>
         <CardContent>
+          <SortableComponent />
+        </CardContent>
+      </Card>
+
+      {/* 7th Card */}
+      <Card className="w-[450px] mt-5 shadow-md">
+        <CardHeader>
+          <div className='flex items-center space-x-2'>
+            <CardTitle className="text-lg">Total Time</CardTitle>
+            <CardDescription className="text-sm">(required)</CardDescription>
+          </div>
+        </CardHeader>
+        <CardContent>
           <form>
             <div>
-              <Textarea placeholder="Type your description here." />
+              <Input id="title" placeholder="Title of the roadmap" />
             </div>
           </form>
         </CardContent>
       </Card>
 
-      {/* 7th Card: Sortable List */}
+      {/* 8th Card */}
       <Card className="w-[450px] mt-5 shadow-md">
         <CardHeader>
           <div className='flex items-center space-x-2'>
-            <CardTitle className="text-lg">Sortable List</CardTitle>
+            <CardTitle className="text-lg">Total Units</CardTitle>
             <CardDescription className="text-sm">(required)</CardDescription>
           </div>
         </CardHeader>
         <CardContent>
-          <SortableComponent />
+          <form>
+            <div>
+              <Input id="title" placeholder="Title of the roadmap" />
+            </div>
+          </form>
         </CardContent>
       </Card>
+
+
+
+
     </div>
   )
 }
