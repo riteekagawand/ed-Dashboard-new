@@ -7,13 +7,6 @@ import { FiPlus, FiMoreVertical, FiTrash } from 'react-icons/fi';
 import { MdOutlineDragIndicator } from "react-icons/md";
 import { Button } from "@/Components/ui/button";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/Components/ui/dropdown-menu";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/Components/ui/card";
 import { Input } from "@/Components/ui/input";
 
 type Item = {
@@ -47,7 +40,7 @@ const SortableField = ({
             placeholder="Type your skill objective"
           />
           <div className="flex items-center space-x-2 ml-2">
-          <Button onClick={onAddItem} className="ml-2 p-2">
+            <Button onClick={onAddItem} className="ml-2 p-2">
               <FiPlus className="text-gray-800" size={20} />
             </Button>
             <DropdownMenu>
@@ -55,12 +48,14 @@ const SortableField = ({
                 <FiMoreVertical className="cursor-pointer" />
               </DropdownMenuTrigger>
               <DropdownMenuContent>
-                <DropdownMenuItem onClick={() => onDelete(item.id)}>
+                <DropdownMenuItem 
+                  onClick={() => onDelete(item.id)}
+                  
+                >
                   <FiTrash className="mr-2" /> Delete Item
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
-            
           </div>
         </div>
       </div>
