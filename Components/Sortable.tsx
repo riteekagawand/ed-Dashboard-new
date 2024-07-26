@@ -47,25 +47,15 @@ const SortableField = ({
               <DropdownMenuTrigger>
                 <FiMoreVertical className="cursor-pointer" />
               </DropdownMenuTrigger>
-<<<<<<< HEAD
-              <DropdownMenuContent>
-                <DropdownMenuItem 
-                  onClick={() => onDelete(item.id)}
-                  
-                >
-                  <FiTrash className="mr-2" /> Delete Item
-                </DropdownMenuItem>
-=======
               <DropdownMenuContent >
               <DropdownMenuItem
                 onClick={() => onDelete(item.id)}
-                className="flex items-center p-2 text-gray-800 bg-gray-200 hover:bg-red-300 hover:text-white focus:bg-red-300 focus:text-white active:bg-red-700 rounded-md transition-colors duration-300"
+                className="flex items-center p-2 text-gray-800 bg-gray-100 hover:bg-red-300 hover:text-gray-800 focus:bg-red-300 focus:text-gray-800 active:bg-red-700 rounded-md transition-colors duration-300"
                 >
                 <FiTrash className="mr-2" />
                 <p className="">Delete Item</p>
               </DropdownMenuItem>
 
->>>>>>> c02ff27376e40f51f954d7b9067d1f7e8c354528
               </DropdownMenuContent>
             </DropdownMenu>
           </div>
@@ -129,4 +119,4 @@ const SortableComponent = () => {
   );
 };
 
-export default SortableComponent;
+export default SortableComponent

@@ -83,21 +83,55 @@ const Mainpage = () => {
 
       {/* 3rd Card */}
       <Card className="w-[450px] mt-5 shadow-md">
-        <CardHeader>
-          <div className='flex items-center space-x-2'>
-            <CardTitle className="text-lg">Logo</CardTitle>
-            <CardDescription className="text-sm">(required)</CardDescription>
-          </div>
-        </CardHeader>
-        <CardContent>
-          <form>
-            <div>
-              <Input id="logo" type="file" placeholder="Logo" onChange={handleLogoChange} />
-              {logo && <img src={logo} alt="Selected logo" className="mt-2 w-full max-h-[200px] object-cover" />}
+          <CardHeader>
+            <div className='flex items-center space-x-2'>
+              <CardTitle className="text-lg">Logo</CardTitle>
+              <CardDescription className="text-sm">(required)</CardDescription>
             </div>
-          </form>
-        </CardContent>
-      </Card>
+          </CardHeader>
+          <CardContent>
+            <form>
+              <div className="flex flex-col space-y-4">
+                {/* Choose a File Option */}
+                <div className="flex items-center space-x-2">
+                  <Input
+                    id="choose-file"
+                    type="file"
+                    placeholder="Choose a file"
+                    onChange={handleLogoChange}
+                    className="hidden"
+                  />
+                  <label htmlFor="choose-file" className="cursor-pointer text-blue-500">
+                    Choose a file
+                  </label>
+                </div>
+
+                {/* Upload a File Here Option */}
+                <div className="flex items-center space-x-2">
+                  <Input
+                    id="upload-file"
+                    type="file"
+                    placeholder="Upload a file here"
+                    onChange={handleLogoChange}
+                    className="hidden"
+                  />
+                  <label htmlFor="upload-file" className="cursor-pointer text-blue-500">
+                    Upload a file here
+                  </label>
+                </div>
+
+                {/* Display Selected Logo */}
+                {logo && (
+                  <img
+                    src={logo}
+                    alt="Selected logo"
+                    className="mt-2 w-full max-h-[200px] object-cover"
+                  />
+                )}
+              </div>
+            </form>
+          </CardContent>
+        </Card>
        {/* 4th Card */}
       <Card className="w-[450px] mt-5 shadow-md">
         <CardHeader>
