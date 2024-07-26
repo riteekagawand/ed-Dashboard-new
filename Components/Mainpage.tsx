@@ -3,6 +3,10 @@ import * as React from "react";
 import { FiUpload } from "react-icons/fi";
 import { PiDiamondsFour } from "react-icons/pi";
 import SortableComponent from "./Sortable";
+import { HiMiniArrowTopRightOnSquare } from "react-icons/hi2";
+import { MdOutlineAddLink } from "react-icons/md";
+
+
 
 import {
   Card,
@@ -25,6 +29,7 @@ import { Textarea } from "@/Components/ui/textarea";
 
 const Mainpage = () => {
   const [logo, setLogo] = React.useState<string | null>(null);
+  const [modules, setModules] = React.useState<string[]>([]);
 
   const handleLogoChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files && event.target.files[0]) {
@@ -33,6 +38,13 @@ const Mainpage = () => {
         setLogo(e.target?.result as string);
       };
       reader.readAsDataURL(event.target.files[0]);
+    }
+  };
+
+  const handleAddModule = (event: React.ChangeEvent<HTMLInputElement>, type: 'existing' | 'new') => {
+    if (event.target.files && event.target.files[0]) {
+      const newModule = type === 'existing' ? 'Existing Module' : 'New Module'; // Modify as needed
+      setModules([...modules, newModule]);
     }
   };
 
@@ -79,62 +91,59 @@ const Mainpage = () => {
       </Card>
 
       {/* 3rd Card */}
-        <Card className="w-[450px] mt-5 shadow-md">
-          <CardHeader>
-            <div className='flex items-center space-x-2'>
-              <CardTitle className="text-lg">Logo</CardTitle>
-              <CardDescription className="text-sm">(required)</CardDescription>
+      <Card className="w-[450px] mt-5 shadow-md">
+        <CardHeader>
+          <div className='flex items-center space-x-2'>
+            <CardTitle className="text-lg">Logo</CardTitle>
+            <CardDescription className="text-sm">(required)</CardDescription>
+          </div>
+        </CardHeader>
+        <CardContent>
+          <form>
+            <div className="flex flex-row gap-[100px]">
+              {/* Choose a File Option */}
+              <div className="flex items-center space-x-2">
+                <PiDiamondsFour className="text-purple-950 text-[20px]" />
+                <Input
+                  id="choose-file"
+                  type="file"
+                  placeholder="Choose a file"
+                  onChange={handleLogoChange}
+                  className="hidden"
+                />
+                <label htmlFor="choose-file" className="cursor-pointer text-purple-900 text-sm font-semibold">
+                  Choose a file
+                </label>
+              </div>
+
+              {/* Upload a File Here Option */}
+              <div className="flex items-center space-x-2">
+                <FiUpload className="text-purple-950 text-[20px]" />
+                <Input
+                  id="upload-file"
+                  type="file"
+                  placeholder="Upload a file here"
+                  onChange={handleLogoChange}
+                  className="hidden"
+                />
+                <label htmlFor="upload-file" className="cursor-pointer text-purple-900 text-sm font-semibold">
+                  Upload a file here
+                </label>
+              </div>
             </div>
-          </CardHeader>
-          <CardContent>
-            <form>
-              <div className="flex flex-row gap-[100px]">
-                {/* Choose a File Option */}
-                <div className="flex  items-center space-x-2">
-                <PiDiamondsFour className="text-purple-500 text-[20px]"/>
-                  <Input
-                    id="choose-file"
-                    type="file"
-                    placeholder="Choose a file"
-                    onChange={handleLogoChange}
-                    className="hidden"
-                  />
-                  <label htmlFor="choose-file" className="cursor-pointer text-purple-500">
-                    Choose a file
-                  </label>
-                </div>
-
-                {/* Upload a File Here Option */}
-                <div className="flex items-center space-x-2">
-                <FiUpload className="text-purple-500 text-[20px]"/>
-                  <Input
-                    id="upload-file"
-                    type="file"
-                    placeholder="Upload a file here"
-                    onChange={handleLogoChange}
-                    className="hidden"
-                  />
-                  <label htmlFor="upload-file" className="cursor-pointer text-purple-500">
-                    Upload a file here
-                  </label>
-                </div>
-
-                
-              </div>
-              <div className="mt-5">
-                {/* Display Selected Logo */}
-                {logo && (
-                  <img
-                    src={logo}
-                    alt="Selected logo"
-                    className="mt-2 w-full max-h-[200px] object-cover"
-                  />
-                )}
-              </div>
-            </form>
-          </CardContent>
-        </Card>
-
+            <div className="mt-5">
+              {/* Display Selected Logo */}
+              {logo && (
+                <img
+                  src={logo}
+                  alt="Selected logo"
+                  className="mt-2 w-full max-h-[200px] object-cover"
+                />
+              )}
+            </div>
+          </form>
+        </CardContent>
+      </Card>
 
       {/* 4th Card */}
       <Card className="w-[450px] mt-5 shadow-md">
@@ -217,6 +226,71 @@ const Mainpage = () => {
           </form>
         </CardContent>
       </Card>
+
+      {/* 9th Card */}
+      <Card className="w-[450px] mt-5 shadow-md">
+        <CardHeader>
+          <div className='flex items-center space-x-2'>
+            <CardTitle className="text-lg">Modules</CardTitle>
+            <CardDescription className="text-sm">(required)</CardDescription>
+          </div>
+        </CardHeader>
+        <CardContent>
+          <form>
+            {/* Display added modules */}
+            <div className="mb-4">
+             
+            </div>
+            <div className="flex flex-row gap-[50px]">
+              {/* Choose Existing Entry Option */}
+              <div className="flex items-center space-x-2">
+                <HiMiniArrowTopRightOnSquare className="text-purple-900 text-[20px]" />
+                <Input
+                  id="choose-existing-entry"
+                  type="file"
+                  placeholder="Choose existing entry"
+                  onChange={(e) => handleAddModule(e, 'existing')}
+                  className="hidden"
+                />
+                <label htmlFor="choose-existing-entry" className="cursor-pointer text-purple-900 text-sm font-semibold">
+                  Choose existing entry
+                </label>
+              </div>
+
+              {/* Create New Entry Option */}
+              <div className="flex items-center space-x-2">
+                <MdOutlineAddLink className="text-purple-900 text-[20px]" />
+                <Input
+                  id="create-new-entry"
+                  type="file"
+                  placeholder="Create new entry"
+                  onChange={(e) => handleAddModule(e, 'new')}
+                  className="hidden"
+                />
+                <label htmlFor="create-new-entry" className="cursor-pointer text-purple-900 text-sm font-semibold">
+                  Create new entry
+                </label>
+              </div>
+            </div>
+          </form>
+        </CardContent>
+      </Card>
+
+      {/* 10th Card */}
+      <Card className="w-[450px] mt-5 shadow-md">
+        <CardHeader>
+          <div className='flex items-center space-x-2'>
+            <CardTitle className="text-lg">Tags</CardTitle>
+            <CardDescription className="text-sm">(required)</CardDescription>
+          </div>
+        </CardHeader>
+        <CardContent>
+          <form>
+            <Input id="tags" placeholder="Tags" />
+          </form>
+        </CardContent>
+      </Card>
+
     </div>
   );
 };
