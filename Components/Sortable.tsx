@@ -28,7 +28,6 @@ const SortableField = ({
   if (!item || !item.id) return null; // Handle undefined or missing id
 
   return (
-    <div className="p-2 bg-gray-100 rounded-md border border-gray-200 shadow-sm">
       <div className="flex items-center justify-between mb-2">
         <div className="flex items-center w-full">
           <MdOutlineDragIndicator className="mr-2 cursor-grab text-gray-500" size={22} />
@@ -41,7 +40,7 @@ const SortableField = ({
           />
           <div className="flex items-center space-x-2 ml-2">
             <Button onClick={onAddItem} className="ml-2 p-2">
-              <FiPlus className="text-gray-800" size={20} />
+              <FiPlus  className="text-gray-800" size={20} />
             </Button>
             <DropdownMenu>
               <DropdownMenuTrigger>
@@ -61,7 +60,6 @@ const SortableField = ({
           </div>
         </div>
       </div>
-    </div>
   );
 };
 
