@@ -1,6 +1,7 @@
 import Navbar from "@/Components/Navbar"
 import Sidebar from "@/Components/Sidebar"
 import Mainpage from "@/Components/Mainpage"
+import Footer from "@/Components/Footer"
 
 export default function Home() {
   return (
@@ -10,6 +11,7 @@ export default function Home() {
     <div className="flex justify-center items-center">
     <Mainpage />
     </div>
+    <Footer />
  
   
     </div>
