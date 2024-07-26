@@ -7,7 +7,7 @@ import { MdOutlineRocketLaunch } from "react-icons/md";
 
 
 
-const Footer: React.FC = () => {
+const Footer= () => {
   return (
     <footer className=" fixed bottom-0 left-0 right-0 py-5">
       <div className="container mx-[130px] flex justify-end items-center space-x-8">
