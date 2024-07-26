@@ -27,30 +27,22 @@ import { RadioGroup, RadioGroupItem } from "@/Components/ui/radio-group"
 import { Textarea } from "@/Components/ui/textarea"
 
 type Item = {
-  id: string
-  content: string
-  subItems: Item[]
-}
+  id: string;
+  content: string;
+};
 
-const MAX_SUBFIELDS = 15
-
-const SortableField = ({ item, onItemChange, onDelete, onAddSubItem, onSubItemChange }: { item: Item, onItemChange: (id: string, content: string) => void, onDelete: (id: string) => void, onAddSubItem: (parentId: string) => void, onSubItemChange: (parentId: string, subItemId: string, content: string) => void }) => {
-  const sortableContainer = useRef<HTMLDivElement>(null)
-
-  useEffect(() => {
-    if (sortableContainer.current) {
-      Sortable.create(sortableContainer.current, {
-        animation: 150,
-        onEnd: (evt) => {
-          // Handle reordering within subItems
-          const newSubItems = [...item.subItems]
-          const [removed] = newSubItems.splice(evt.oldIndex, 1)
-          newSubItems.splice(evt.newIndex, 0, removed)
-          onItemChange(item.id, JSON.stringify(newSubItems))
-        },
-      })
-    }
-  }, [item.subItems])
+const SortableField = ({
+  item,
+  onItemChange,
+  onDelete,
+  onAddItem
+}: {
+  item: Item;
+  onItemChange: (id: string, content: string) => void;
+  onDelete: (id: string) => void;
+  onAddItem: () => void;
+}) => {
+  if (!item || !item.id) return null; // Handle undefined or missing id
 
   return (
     <div className="p-2 bg-gray-100 rounded-md border border-gray-200 shadow-sm">
@@ -65,12 +57,7 @@ const SortableField = ({ item, onItemChange, onDelete, onAddSubItem, onSubItemCh
             placeholder="Type your skill objective"
           />
           <div className="flex items-center space-x-2 ml-2">
-            <Button
-              onClick={() => onAddSubItem(item.id)}
-              disabled={item.subItems.length >= MAX_SUBFIELDS}
-              className="p-2 bg-gray-100"
-              variant="gray"
-            >
+          <Button onClick={onAddItem} className="ml-2 p-2">
               <FiPlus className="text-gray-800" size={20} />
             </Button>
             <DropdownMenu>
@@ -83,126 +70,81 @@ const SortableField = ({ item, onItemChange, onDelete, onAddSubItem, onSubItemCh
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
+            
           </div>
         </div>
       </div>
-      <div ref={sortableContainer}>
-        {item.subItems.map(subItem => (
-          <div key={subItem.id} className="flex items-center mb-2 p-2 bg-white rounded-md border border-gray-300 shadow-sm w-full">
-            <MdOutlineDragIndicator className="mr-2 cursor-grab text-gray-500" size={22} />
-            <Input
-              type="text"
-              value={subItem.content}
-              onChange={(e) => onSubItemChange(item.id, subItem.id, e.target.value)}
-              className="flex-1"
-              placeholder="Type your skill objective"
-            />
-            <div className="flex items-center space-x-2 ml-2">
-              <Button
-                onClick={() => onAddSubItem(item.id)}
-                disabled={item.subItems.length >= MAX_SUBFIELDS}
-                className="p-2 bg-gray-100"
-                variant="gray"
-              >
-                <FiPlus className="text-gray-800" size={20} />
-              </Button>
-              <DropdownMenu>
-                <DropdownMenuTrigger>
-                  <FiMoreVertical className="cursor-pointer" />
-                </DropdownMenuTrigger>
-                <DropdownMenuContent>
-                  <DropdownMenuItem onClick={() => onDelete(subItem.id)}>
-                    <FiTrash className="mr-2" /> Delete Item
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
-            </div>
-          </div>
-        ))}
-      </div>
     </div>
-  )
-}
+  );
+};
 
 const SortableComponent = () => {
-  const [items, setItems] = useState<Item[]>([
-    { id: '1', content: '', subItems: [] },
-    { id: '2', content: '', subItems: [] },
-    { id: '3', content: '', subItems: [] }
-  ])
+  const [items, setItems] = useState<Item[]>([{ id: '1', content: '' }]);
 
   const handleItemChange = (id: string, content: string) => {
-    setItems(items.map(item =>
-      item.id === id ? { ...item, content: content.startsWith('[') ? JSON.parse(content) : content } : item
-    ))
-  }
+    setItems(items.map(item => item.id === id ? { ...item, content } : item));
+  };
 
-  const handleSubItemChange = (parentId: string, subItemId: string, content: string) => {
-    setItems(items.map(item => 
-      item.id === parentId 
-        ? { ...item, subItems: item.subItems.map(subItem => 
-            subItem.id === subItemId ? { ...subItem, content } : subItem 
-          )} 
-        : item
-    ))
-  }
-
-  const handleAddSubItem = (parentId: string) => {
-    setItems(items.map(item => {
-      if (item.id === parentId) {
-        if (item.subItems.length < MAX_SUBFIELDS) {
-          const newSubItem = { id: `${item.id}-${item.subItems.length + 1}`, content: '', subItems: [] }
-          return { ...item, subItems: [...item.subItems, newSubItem] }
-        }
-      }
-      return item
-    }))
-  }
+  const handleAddItem = () => {
+    const newId = (items.length + 1).toString(); // Ensure ID is a string
+    const newItem = { id: newId, content: '' };
+    setItems([...items, newItem]);
+  };
 
   const handleDeleteItem = (id: string) => {
-    const deleteSubItem = (items: Item[]) => {
-      return items.map(item => ({
-        ...item,
-        subItems: item.subItems.filter(subItem => subItem.id !== id)
-      })).filter(item => item.id !== id)
-    }
-    setItems(deleteSubItem)
-  }
+    setItems(items.filter(item => item.id !== id));
+  };
 
-  const sortableContainer = useRef<HTMLDivElement>(null)
+  const sortableContainer = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (sortableContainer.current) {
-      Sortable.create(sortableContainer.current, {
+      const sortable = Sortable.create(sortableContainer.current, {
         animation: 150,
         onEnd: (evt) => {
-          const newItems = [...items]
-          const [removed] = newItems.splice(evt.oldIndex, 1)
-          newItems.splice(evt.newIndex, 0, removed)
-          setItems(newItems)
+          const newItems = [...items];
+          const [removed] = newItems.splice(evt.oldIndex, 1);
+          newItems.splice(evt.newIndex, 0, removed);
+          setItems(newItems);
         },
-      })
+      });
+
+      return () => {
+        sortable.destroy(); // Cleanup sortable instance
+      };
     }
-  }, [items])
+  }, [items]);
 
   return (
-    <div className="space-y-4" ref={sortableContainer}>
-      {items.map(item => (
-        <SortableField
-          key={item.id}
-          item={item}
-          onItemChange={handleItemChange}
-          onDelete={handleDeleteItem}
-          onAddSubItem={handleAddSubItem}
-          onSubItemChange={handleSubItemChange}
-        />
-      ))}
+    <div>
+      <div className="space-y-4" ref={sortableContainer}>
+        {items.map(item => (
+          <SortableField
+            key={item.id}
+            item={item}
+            onItemChange={handleItemChange}
+            onDelete={handleDeleteItem}
+            onAddItem={handleAddItem}
+          />
+        ))}
+      </div>
     </div>
-  )
-}
-
+  );
+};
 
 const Mainpage = () => {
+  const [logo, setLogo] = useState<string | null>(null);
+
+  const handleLogoChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (event.target.files && event.target.files[0]) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        setLogo(e.target?.result as string);
+      };
+      reader.readAsDataURL(event.target.files[0]);
+    }
+  };
+
   return (
     <div className="p-4">
       {/* 1st Card */}
@@ -260,13 +202,13 @@ const Mainpage = () => {
         <CardContent>
           <form>
             <div>
-              <Input id="logo" type="file" placeholder="Logo" />
+              <Input id="logo" type="file" placeholder="Logo" onChange={handleLogoChange} />
+              {logo && <img src={logo} alt="Selected logo" className="mt-2 w-full max-h-[200px] object-cover" />}
             </div>
           </form>
         </CardContent>
       </Card>
-
-      {/* 4th Card */}
+       {/* 4th Card */}
       <Card className="w-[450px] mt-5 shadow-md">
         <CardHeader>
           <div className='flex items-center space-x-2'>
@@ -303,7 +245,7 @@ const Mainpage = () => {
         <CardContent>
           <form>
             <div>
-              <Textarea placeholder="Type your description here." />
+              <Textarea id="description" placeholder="Description of your roadmap" />
             </div>
           </form>
         </CardContent>
@@ -313,7 +255,7 @@ const Mainpage = () => {
       <Card className="w-[450px] mt-5 shadow-md">
         <CardHeader>
           <div className='flex items-center space-x-2'>
-            <CardTitle className="text-lg">Skill Objective</CardTitle>
+            <CardTitle className="text-lg">Skill Objectives</CardTitle>
             <CardDescription className="text-sm">(required)</CardDescription>
           </div>
         </CardHeader>
@@ -355,11 +297,7 @@ const Mainpage = () => {
           </form>
         </CardContent>
       </Card>
-
-
-
-
-    </div>
+</div>
   )
 }
 
